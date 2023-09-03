@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 const TextStyle h1Semibold =
     TextStyle(fontSize: 32, fontWeight: FontWeight.w600);
 const TextStyle b3Medium = TextStyle(fontSize: 12, fontWeight: FontWeight.bold);
+const TextStyle b3Regular =
+    TextStyle(fontSize: 12, fontWeight: FontWeight.normal);
+const TextStyle b2Medium = TextStyle(fontSize: 14, fontWeight: FontWeight.bold);
+const TextStyle b1Medium = TextStyle(fontSize: 16, fontWeight: FontWeight.bold);
 
 const charizard = MaterialColor(0xffFFC107, <int, Color>{
   100: Color(0xffFFECB3),

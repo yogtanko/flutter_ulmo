@@ -2,26 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_ulmo/config/constants.dart';
-import 'package:flutter_ulmo/domain/models/category_model.dart';
-import 'package:flutter_ulmo/domain/models/story_model.dart';
+import 'package:flutter_ulmo/domain/datasources/dump.dart';
 
 class MainPage extends StatelessWidget {
-  MainPage({super.key});
-
-  final List<StoryModel> storyData = [
-    StoryModel("assets/img/s1.png", "best of 2020"),
-    StoryModel("assets/img/s2.png", "the golden hour"),
-    StoryModel("assets/img/s3.png", "lovely kitchen"),
-    StoryModel("assets/img/s4.png", "summer choice"),
-  ];
-
-  final List<CategoryModel> categoryData = [
-    CategoryModel("bedroom", 'assets/img/c1.png'),
-    CategoryModel("living room", 'assets/img/c2.png'),
-    CategoryModel("kitchen", 'assets/img/c3.png'),
-    CategoryModel("dining", 'assets/img/c4.png'),
-    CategoryModel("bathroom", 'assets/img/c5.png'),
-  ];
+  const MainPage({super.key});
 
   _storiesItem(index) {
     return GestureDetector(
@@ -91,11 +75,71 @@ class MainPage extends StatelessWidget {
     );
   }
 
+  _favoriteSwitch(index) {
+    popularItem[index].isFavorite = !popularItem[index].isFavorite;
+  }
+
   _popular(index) {
     return Container(
-      width: 100,
-      height: 100,
-      color: venusaur,
+      margin: const EdgeInsets.all(8),
+      child: Column(
+        children: [
+          //image
+          Stack(
+            children: [
+              Image(
+                image: AssetImage(popularItem[index].imgPath[0]),
+              ),
+              popularItem[index].isNew
+                  ? Container(
+                      width: 46,
+                      height: 24,
+                      margin: const EdgeInsets.only(left: 8, top: 10),
+                      decoration: BoxDecoration(
+                        color: charizard[400],
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "new",
+                          style: b2Medium,
+                        ),
+                      ),
+                    )
+                  : const SizedBox(),
+            ],
+          ),
+          const SizedBox(height: 8),
+          //row of price and favorited
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                popularItem[index].itemPrice,
+                style: b1Medium,
+              ),
+              GestureDetector(
+                onTap: () => _favoriteSwitch(index),
+                child: Icon(
+                  popularItem[index].isFavorite
+                      ? Icons.favorite
+                      : Icons.favorite_border,
+                  color: black,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          //description
+          Text(
+            popularItem[index].itemDescription,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            style: b3Regular.copyWith(color: giratina[500]),
+          ),
+        ],
+      ),
     );
   }
 
@@ -104,8 +148,6 @@ class MainPage extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const ClampingScrollPhysics(),
-          scrollDirection: Axis.vertical,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -144,7 +186,6 @@ class MainPage extends StatelessWidget {
                 height: 88,
                 child: Expanded(
                   child: ListView.builder(
-                    physics: const ClampingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     itemCount: storyData.length,
                     itemBuilder: (context, index) => _storiesItem(index),
@@ -157,7 +198,6 @@ class MainPage extends StatelessWidget {
                 child: Expanded(
                   child: ListView.builder(
                     shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: categoryData.length,
                     itemBuilder: (context, index) => _categories(index),
@@ -166,7 +206,7 @@ class MainPage extends StatelessWidget {
               ),
 
               const SizedBox(height: 16),
-              //Popular item
+              //Popular Text
               const Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
@@ -176,6 +216,22 @@ class MainPage extends StatelessWidget {
               ),
 
               const SizedBox(height: 16),
+              //Popular item
+              SizedBox(
+                child: Expanded(
+                  child: GridView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    shrinkWrap: true,
+                    itemCount: popularItem.length,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      childAspectRatio: 164 / 268,
+                      crossAxisCount: 2,
+                    ),
+                    itemBuilder: (context, index) => _popular(index),
+                  ),
+                ),
+              ),
             ],
           ),
         ),

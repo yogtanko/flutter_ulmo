@@ -4,6 +4,6 @@ class CategoryModel {
 
   CategoryModel(this._title, this._imgPath);
 
-  get title => _title;
-  get imgPath => _imgPath;
+  String get title => _title;
+  String get imgPath => _imgPath;
 }
