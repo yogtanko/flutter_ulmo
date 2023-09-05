@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_ulmo/config/constants.dart';
 import 'package:flutter_ulmo/domain/datasources/dump.dart';
+import 'package:flutter_ulmo/presentation/category_page.dart';
+import 'package:flutter_ulmo/presentation/widgets/search_bar.dart';
 
 class MainPage extends StatelessWidget {
   const MainPage({super.key});
@@ -49,28 +51,40 @@ class MainPage extends StatelessWidget {
     );
   }
 
-  _categories(index) {
-    return Container(
-      height: 100,
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      padding: const EdgeInsets.only(left: 16, top: 16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: giratina[100],
-        image: DecorationImage(
-          alignment: Alignment.centerRight,
-          image: AssetImage(categoryData[index].imgPath),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            categoryData[index].title,
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+  _categories(index, BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => CategoryPage(
+              categoryTitle: categoryData[index].title,
+            ),
           ),
-        ],
+        );
+      },
+      child: Container(
+        height: 100,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        padding: const EdgeInsets.only(left: 16, top: 16),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(8),
+          color: giratina[100],
+          image: DecorationImage(
+            alignment: Alignment.centerRight,
+            image: AssetImage(categoryData[index].imgPath),
+          ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              categoryData[index].title.toLowerCase(),
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -159,26 +173,7 @@ class MainPage extends StatelessWidget {
               const SizedBox(height: 16),
 
               //Search bar
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: giratina[100],
-                ),
-                child: TextField(
-                  cursorColor: giratina[500],
-                  decoration: InputDecoration(
-                    border: InputBorder.none,
-                    hintStyle: TextStyle(color: giratina[500]),
-                    hintText: "Search",
-                    icon: Icon(
-                      Icons.search,
-                      color: giratina[500],
-                    ),
-                  ),
-                ),
-              ),
+              searchBar(),
               const SizedBox(height: 16),
 
               //Stories
@@ -200,7 +195,8 @@ class MainPage extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemCount: categoryData.length,
-                    itemBuilder: (context, index) => _categories(index),
+                    itemBuilder: (context, index) =>
+                        _categories(index, context),
                   ),
                 ),
               ),
@@ -224,7 +220,8 @@ class MainPage extends StatelessWidget {
                     shrinkWrap: true,
                     itemCount: popularItem.length,
                     physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
                       childAspectRatio: 164 / 268,
                       crossAxisCount: 2,
                     ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_ulmo/config/theme.dart';
+import 'package:flutter_ulmo/presentation/category_page.dart';
 import 'package:flutter_ulmo/presentation/main_page.dart';
 
 void main() {
@@ -15,9 +16,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: lightTheme,
-      home: MainPage(),
+      home: const MainPage(),
       routes: {
-        '/main_page': (context) => MainPage(),
+        '/main_page': (context) => const MainPage(),
       },
     );
   }
